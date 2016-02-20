@@ -12,7 +12,7 @@ restore-on-startup:
 ```
 Plugin will restore the world named "survival-1" on server startup.
 
-An API here allown runtime map restore.
-> MapRestore.restoreMap(survival-1);
+An API here allowed runtime map restore.
+> MapRestore.restoreMap("survival-1");
 
 It will unload, restore and reload the world named "survival".
