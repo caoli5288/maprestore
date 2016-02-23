@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Created on 16-2-20.
@@ -51,35 +52,37 @@ public class MapRestore extends JavaPlugin {
         if (DEBUG) {
             getLogger().info("Restoring " + source.getName() + "...");
         }
-        if (target.exists()) {
-            delete(target);
-        }
-        copy(source, target);
-    }
-
-    private static void copy(File source, File target) {
         try {
-            int result = new ProcessBuilder("cp", "-a", source.getAbsolutePath(), target.getAbsolutePath())
-                    .start()
-                    .waitFor();
-            if (result != 0) {
-                throw new RuntimeException("DEBUG #2");
+            if (target.exists()) {
+                delete(target);
             }
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            copy(source, target);
+        } catch (IOException e) {
+            throw new RuntimeException("Restore error!", e);
         }
     }
 
-    private static void delete(File file) {
-        try {
-            int result = new ProcessBuilder("rm", "-r", "-f", file.getAbsolutePath())
-                    .start()
-                    .waitFor();
-            if (result != 0) {
-                throw new RuntimeException("DEBUG #1");
+    public static void copy(File source, File target) throws IOException {
+        if (source.isDirectory()) {
+            if (!target.isDirectory()) {
+                target.mkdir();
             }
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+            for (File f : source.listFiles()) {
+                copy(f, new File(target, f.getName()));
+            }
+        } else {
+            Files.copy(source.toPath(), target.toPath());
+        }
+    }
+
+    public static void delete(File file) throws IOException {
+        if (file.isDirectory()) {
+            for (File f : file.listFiles()) {
+                delete(f);
+            }
+            Files.delete(file.toPath());
+        } else {
+            Files.delete(file.toPath());
         }
     }
 

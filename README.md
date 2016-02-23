@@ -1,9 +1,6 @@
 # MapRestore
 Restore game map. It restore map on server startup or runtime.
 
-## Requirement
-- *nix operation system
-
 ## Usage
 Put your world folder into plugin's data folder and edit configure.
 ```YAML
