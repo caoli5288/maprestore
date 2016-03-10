@@ -18,6 +18,7 @@ public class MapRestore extends JavaPlugin {
         for (String line : getConfig().getStringList("restore-on-startup")) {
             restore(line);
         }
+        getDataFolder().mkdir();
     }
 
     private void restore(String line) {
